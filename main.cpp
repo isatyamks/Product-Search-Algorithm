@@ -1,107 +1,95 @@
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+
 using namespace std;
 
-
-class Skart{
-
-    private:
-        int price;
-        int total_price;
-        int bill_number;
-        string cus_name;
-        string product_name;
-        int rating;
-
-
-
-
-    protected:
-        int database;
-
-    public:
-
+class Skart
+{
+private:
+    int name;
     
 
+    int price;
+    int total_price;
+    int bill_number;
+    string cus_name;
+    string product_name;
+    int rating;
+    string filter_names;
+
+public:
     void search_button();
-
     void billing();
-
-    void searchalgo(string);
-
     void readdatabase();
-
-
     void dispaly_product();
 
 
-
-
-
-};
-    void Skart:: readdatabase() {
-        ifstream fin("database.csv"); 
-
-        if (!fin.is_open()) {
-            cerr << "Error opening file." << endl;
-            return;
-        }
-
-        string row1, row2;
-
-        getline(fin, row1);
-        getline(fin, row2);
-
-        cout << row1 << endl;
-        cout << row2 << endl;
-
-        fin.close(); 
-
-
     
+    vector<string> myalgo(const string &product_name);
+};
 
+void Skart::search_button()
+{
+    string product_name;
+    cout << "Enter the Product name: ";
+    cin >> product_name;
+    cout << "Searching for product: " << product_name << endl;
 
+    vector<string> result = myalgo(product_name);
 
-
-
+    if (result.empty())
+    {
+        cout << "Product not found." << endl;
+    }
+    else
+    {
+        cout << "Found product(s):" << endl;
+        for (const auto &entry : result)
+        {
+            cout << entry << endl;
+        }
+    }
 }
-void Skart :: search_button(){
 
+vector<string> Skart::myalgo(const string &product_name)
+{
+    vector<string> filter_names;
 
+    ifstream file("database.csv");
+    if (!file.is_open())
+    {
+        cerr << "Error opening file: " << "database.csv" << endl;
+        return filter_names;
+        
+    }
 
+    string line;
+    while (getline(file, line))
+    {
+        istringstream iss(line);
+        string name;
+        while (getline(iss, name, ','))
+        {
+            if (name == product_name)
+            {
+                filter_names.push_back(line);
+                break;
+            }
+        }
+    }
 
-    cout<<"Enter the Product name........";
-    cin>>product_name;
-    cout<<"Loading....";
-    searchalgo(product_name);
-
+    file.close();
+    return filter_names;
+    cout<<endl;
 }
-
-void Skart ::searchalgo(string product_name){
-
-
-
-
-}
-
 
 int main()
 {
-    // cout<<"Welcome to Skart..."<<endl;
-    // cout<<"choose Options to proceed!"<<endl;
-
-    // cout<<"[1]--- for Search Button !";
-    // cout<<endl;
-
     Skart ob1;
-    ob1.readdatabase();
-    
-
-
-
-    
-
-
+    ob1.search_button();
 
     return 0;
 }
