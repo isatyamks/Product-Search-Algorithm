@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <cctype>
 
 using namespace std;
 
@@ -31,11 +32,18 @@ public:
     vector<string> myalgo(const string &product_name);
 };
 
+string string_lower(string s){
+        string result;
+        for(const char c:s)
+            result+=tolower(c);
+
+        return result;
+}
 void Skart::search_button()
 {
     string product_name;
     cout << "Enter the Product name: ";
-    cin >> product_name;
+    getline(cin,product_name);
     cout << "Searching for product: " << product_name << endl;
 
     vector<string> result = myalgo(product_name);
@@ -72,8 +80,9 @@ vector<string> Skart::myalgo(const string &product_name)
         istringstream iss(line);
         string name;
         while (getline(iss, name, ','))
-        {
-            if (name == product_name)
+        {   string t_name=string_lower(name);
+            string t_product=string_lower(product_name);
+            if (t_name.find(t_product)!=string::npos)
             {
                 filter_names.push_back(line);
                 break;
