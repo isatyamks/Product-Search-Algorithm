@@ -82,8 +82,8 @@ vector<string> Skart::myalgo(const string &product_name) {
     }
 
     file.close();
-    cout<<found_products.line;
-    return found_products;
+    
+    //return found_products;
 }
 
 void Skart::display_product() {
