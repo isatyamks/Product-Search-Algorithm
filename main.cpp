@@ -10,93 +10,94 @@ using namespace std;
 class Skart
 {
 private:
-    int name;
-    
+    struct Product {
+        string model;
+        int price;
+        double rating;
+        string features;
+    };
 
-    int price;
-    int total_price;
-    int bill_number;
-    string cus_name;
-    string product_name;
-    int rating;
-    string filter_names;
+    vector<Product> filter_names;
 
 public:
     void search_button();
-    void billing();
-    void readdatabase();
-    void dispaly_product();
-
-
-    
+    void display_product();
     vector<string> myalgo(const string &product_name);
 };
 
-string string_lower(string s){
-        string result;
-        for(const char c:s)
-            result+=tolower(c);
+string string_lower(string s) {
+    string result;
+    for (const char c : s)
+        result += tolower(c);
 
-        return result;
+    return result;
 }
-void Skart::search_button()
-{
+
+void Skart::search_button() {
     string product_name;
     cout << "Enter the Product name: ";
-    getline(cin,product_name);
+    getline(cin, product_name);
     cout << "Searching for product: " << product_name << endl;
 
     vector<string> result = myalgo(product_name);
 
-    if (result.empty())
-    {
+    if (result.empty()) {
         cout << "Product not found." << endl;
     }
-    else
-    {
+    else {
         cout << "Found product(s):" << endl;
-        for (const auto &entry : result)
-        {
+        for (const auto &entry : result) {
             cout << entry << endl;
         }
     }
 }
 
-vector<string> Skart::myalgo(const string &product_name)
-{
-    vector<string> filter_names;
+vector<string> Skart::myalgo(const string &product_name) {
+    vector<string> found_products;
 
     ifstream file("database.csv");
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         cerr << "Error opening file: " << "database.csv" << endl;
-        return filter_names;
-        
+        return found_products;
     }
 
     string line;
-    while (getline(file, line))
-    {
+    getline(file, line); // Read and ignore header
+
+    while (getline(file, line)) {
         istringstream iss(line);
-        string name;
-        while (getline(iss, name, ','))
-        {   string t_name=string_lower(name);
-            string t_product=string_lower(product_name);
-            if (t_name.find(t_product)!=string::npos)
-            {
-                filter_names.push_back(line);
-                break;
-            }
+        string model, price_str, rating_str, features;
+        double rating;
+
+        getline(iss, model, ',');
+        getline(iss, price_str, ',');
+        getline(iss, rating_str, ',');
+        getline(iss, features, ',');
+
+        rating = stod(rating_str);
+
+        if (string_lower(model).find(string_lower(product_name)) != string::npos) {
+            found_products.push_back(line);
         }
     }
 
     file.close();
-    return filter_names;
-    cout<<endl;
+    cout<<found_products.line;
+    return found_products;
 }
 
-int main()
-{
+void Skart::display_product() {
+    cout << "Found products:" << endl;
+    for (const auto& product : filter_names) {
+        cout << "Model: " << product.model << endl;
+        cout << "Price: " << product.price << endl;
+        cout << "Rating: " << product.rating << endl;
+        cout << "Features: " << product.features << endl;
+        cout << "---------------------" << endl;
+    }
+}
+
+int main() {
     Skart ob1;
     ob1.search_button();
 
