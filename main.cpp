@@ -17,11 +17,19 @@ private:
 
 public:
     void search_button();
-    void display_product();
     vector<Skart> myalgo(const string &product_name);
     Skart(string="",int=0,double=0.0f,string="");
 };
 
+string string_clear(const string &str){
+    string res;
+    for(const char c:str){
+        if(isdigit(c))
+        res+=c;
+
+    }
+    return res;
+}
 Skart::Skart(string m,int p,double r,string f)
     :model{m},price{p},rating{r},features{f}{
 
@@ -49,7 +57,7 @@ void Skart::search_button() {
         cout << "Found product(s):" << endl;
         for (auto &entry : result) {
             cout << "Model: " << entry.model << endl;
-            cout << "Price: " << entry.price << endl;
+            cout << "Price: $" << entry.price << endl;
             cout << "Rating: " << entry.rating << endl;
             cout << "Features: " <<entry.features << endl;
             cout << "---------------------" << endl;
@@ -71,18 +79,17 @@ vector<Skart> Skart::myalgo(const string &product_name) {
     while (getline(file, line)) {
         istringstream iss(line);
         string model, price_str, rating_str, features;
-        double rating;
+        ;
 
         getline(iss, model, ',');
         getline(iss, price_str, ',');
         getline(iss, rating_str, ',');
-        getline(iss, features, ',');
 
+        features=line.substr(line.find('"')+1,line.length()-(line.find('"')+1)-1);
 
-        rating = stod(rating_str);
 
         if (string_lower(model).find(string_lower(product_name)) != string::npos) {
-            found_products.emplace_back(model,stoi(price_str),stod(rating_str),features);
+            found_products.emplace_back(model,stoi(string_clear(price_str)),stod(rating_str),features);
         }
     }
 
